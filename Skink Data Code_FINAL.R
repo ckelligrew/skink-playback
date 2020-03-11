@@ -10,12 +10,14 @@ install.packages("MuMIn")
 install.packages("rsq")
 install.packages("emmeans")
 install.packages("ggplot2")
+install.packages("sjstats")
 
 library(Cairo)
 library(MuMIn)
 library(rsq)
 library(emmeans)
 library(ggplot2)
+library(sjstats)
 
 #############################################################################################
 #####SECTION 1: TESTING FOR COLLINEARITY OF COVARIATES AND TREATMENT #########################
@@ -165,21 +167,21 @@ plot(fittedFID, FIDResid)
 #####SECTION 7: R2 OF MODELS AND PARTIAL R2 OF PREDICTOR VARIABLES########
 ###Purpose: Find strength of models and predictors 
 
-#Looking model
+#Looking model R2 and partial R2 values
 looklm<- lm(lookRateDiff ~  treatment + observer + SD + location, data=skinkData)
 rsq(looklm) #model explains 22.59% observed variation 
 rsq.partial(looklm)
 
-#Locomotion model
+#Locomotion model R2 and partial R2 values
 locomotionlm<-lm(log10LocomotionRateDiff ~ treatment + SD + location, data=skinkData)
 rsq(locomotionlm) #model explains 8.80% observed variation
 rsq.partial(locomotionlm)
 
-#FID model
+#FID model R2 and eta-squared values
 FIDlm<- lm(FID ~ lookResid + locoResid + treatment + SD + treatment*SD + location, data=skinkData)
 rsq(FIDlm) #model explains 28.75% observed variation
-rsq.partial(FIDlm)
-
+FIDlmAnova<- anova(FIDlm) #create anova to calculate eta-squared values
+eta_sq(FIDlm)
 
 #############################################################################################
 #####SECTION 8: GRAPHS#######################################################################
@@ -286,3 +288,4 @@ citation(package = "emmeans")
 citation(package = "MuMIn")
 citation(package = "rsq")
 citation(package = "Cairo")
+citation(package = "sjstats")
